@@ -1,0 +1,132 @@
+---
+title: "Assignment1"
+author: "Tzu Yu Huang"
+date: "2022-12-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+## 1. Set up and read in the data
+
+```{r}
+library(dplyr)
+library(lmtest)
+master <- read.csv('Assignment1/master_data.csv')
+lab <- read.csv('Assignment1/t016.csv')
+adv <- read.csv('Assignment1/t05xc.csv')
+```
+
+## 2. Take a look and organize the data.
+
+According to the instructions, I'll acquire the patients treatment assignment and region information from dataset "master", and potassium value information from the datasets "lab" and "adv".  
+
+There are too many variables in the master dataset, so I'll just extract those that are needed. 
+
+```{r}
+mas <- master[, c("master_id", "treat", "region")]
+```
+
+Take a look at how many patients are there and how many different region and treatment assignments.
+
+```{r}
+length(mas$master_id)
+length(unique(mas$master_id))
+table(mas$region)
+table(mas$treat)
+```
+
+So we can see that there are two treatment groups, two regions, and no duplicated master_id in dataset "mas".
+
+```{r}
+head(lab)
+head(adv)
+```
+
+## 3. Discover patients that have experienced Hyperkalemia before (defined as any potassium value >=5.5)
+
+First acquire a list from dataset "lab"
+
+```{r}
+lab_list <- lab[lab$k >= 5.5 & !is.na(lab$k), ]$master_id
+```
+
+Next from dataset "adv"
+
+```{r}
+adv_list <- adv[adv$k >= 5.5 & !is.na(adv$k), ]$master_id
+```
+
+Then combine the list to get patients that have experienced hyperkalemia before.
+
+```{r}
+list <- c(lab_list, adv_list) %>% unique()
+```
+
+Combine these information with the dataset "mas". "hyperk" = 1 indicates this patient has experienced hyperkalemia before.
+
+```{r}
+mas$hyperk <- ifelse(mas$master_id %in% list, 1, 0 ) 
+```
+
+Now that we have a dataset that has information about treatment, hyperkalemia, region, and patient identifier. And No NA value or unusually small or large value being observed.
+
+```{r}
+summary(mas)
+```
+
+## 4. Answer the questions
+
+Since the outcome of interest for this question is binary by nature (whether or not a patient has ever experienced hyperkalemia), I will implement a logistic regression model for the following questions. 
+
+## a) Is there evidence that the drug is associated with hyperkalemia?
+
+The first model I fit only have treatment assignmnet as independent variable.
+
+```{r}
+mas$treat <- as.factor(mas$treat)
+mas$region <- as.factor(mas$region)
+logit <- glm(hyperk ~ treat, data = mas, family = "binomial" (link = 'logit'))
+summary(logit)
+```
+
+And yes, there is evidence that the drug is associated with hyperkalemia, the treatment is statistically significantly associated with hyperkalemia (p value = 1.47e-15).
+
+Next, I fit another model while controlling for the main effect of geographic region. 
+
+```{r}
+reglogit <- glm(hyperk ~ treat + region, data = mas, family = "binomial" (link = 'logit'))
+summary(reglogit)
+```
+
+```{r}
+lrtest(reglogit, logit)
+```
+
+The treatment is still statistically significantly associated with hyperkalemia after adjusting for geographic region (p value = 1.27e-15). And the new model with region also shows a statistically significant better fit compare to model without region. 
+
+## b) Does the drug effect depend on geographic region?
+
+To see if the effect of drug depend on geographic region, I included an interaction term.
+
+```{r}
+intlogit <- glm(hyperk ~ treat*region, data = mas, family = "binomial"(link = 'logit'))
+summary(intlogit)
+```
+
+```{r}
+lrtest(intlogit, reglogit)
+lrtest(intlogit, logit)
+```
+
+It appears that the effect of drug does depend on geographic region (p value = 4.16e-06). Interestingly, geographical region itself no longer has a statistically significant relationship with hyperkalemia (p value = 0.703). This model with interaction term provides a lower AIC (2667.3) and statistically better fit compare to the previous two model with and without region (LR test: p value = 3.952e-06, 6.195e-12, respectively). 
+
+
+

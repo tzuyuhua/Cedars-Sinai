@@ -1,0 +1,12 @@
+
+You will see a data-driven chart on the "chart" tab of the Excel file. The motivation for creating this type of "Sankey diagram" chart is summarized in the PDF article (for reference only). The assignment is to see if you can find an approach to recreating the same chart in the Excel file, but using ggplot2. An example of such a plot is shown in the file 'example-plot-R.png'. Please do your best to match the excel file output in terms of ribbon color, ribbon opacity, text color, text location, and the size of the white-space surrounding the colored shapes in the plot. 
+
+Please submit you answer in the form of an RMarkdown document, or other literate programming (https://en.wikipedia.org/wiki/Literate_programming) form (Jupiter Notebook EG).
+
+Strongly Encouraged:
+ï Include versions of the sankey diagram with and without the horizontal and vertical white space in the plot. (With and without the white space separating shapes of the same color from one another, and with and without the white space separating shapes of different colors from one another.)
+
+For Bonus Points:
+ï Create a function that takes in datasets and plots the sankey diagram. Make the function  able to output plot versions with and without the vertical and horizontal white space.
+ï Submit your answer to us by creating a package (http://r-pkgs.had.co.nz/). Include the dataset you use to create the sankey diagram in the package, and include your writeup as a package vignette. Upload it to github so that we can install it from R.
+
