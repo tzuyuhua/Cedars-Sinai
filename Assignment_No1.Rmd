@@ -2,7 +2,8 @@
 title: "Assignment1"
 author: "Tzu Yu Huang"
 date: "2022-12-08"
-output: html_document
+output: github_document
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}

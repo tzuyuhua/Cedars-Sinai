@@ -1,22 +1,11 @@
----
-title: "Assignment2"
-author: "Tzu Yu Huang"
-date: "2022-12-08"
-output: github_document
-always_allow_html: true
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-	echo = TRUE,
-	message = FALSE,
-	warning = FALSE
-)
-```
+Assignment2
+================
+Tzu Yu Huang
+2022-12-08
 
 ## 1. Set up and read in the data
 
-```{r}
+``` r
 library(reshape2)
 library(ggplot2)
 library(ggalluvial)
@@ -27,14 +16,14 @@ sank <- read_excel("Assignment2/Stacked_column_stroke_blacks_noAF.xlsx", sheet =
 
 ## 2. Transform the data so that it can be recognize by ggplot sankey package.
 
-```{r}
+``` r
 sank2 <-melt(sank)
 names(sank2) <- c("risk_factors", "year", "value")
 ```
 
 ## 3. Plot the Sankey diagram, with white space
 
-```{r}
+``` r
 ggplot(sank2, aes(x = year, 
                   y = value, 
                   alluvium = risk_factors,
@@ -72,13 +61,13 @@ theme(legend.position = "none",
            panel.grid.minor = element_blank(),
            axis.text.y = element_blank(),
            axis.ticks = element_blank())
-
 ```
 
+![](Assignment_No2_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ## 4. Plot the Sankey diagram, without white space
 
-```{r}
+``` r
 ggplot(sank2, aes(x = year, 
                   y = value, 
                   alluvium = risk_factors,
@@ -110,5 +99,4 @@ theme(legend.position = "none",
            axis.ticks = element_blank())
 ```
 
-
-
+![](Assignment_No2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
