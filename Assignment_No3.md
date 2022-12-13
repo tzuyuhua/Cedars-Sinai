@@ -3,7 +3,7 @@ Assignment3
 Tzu Yu Huang
 2022-12-08
 
-## 1. Setup and read in the data
+## 1. Setup and read in the data.
 
 ``` r
 # load the required package
