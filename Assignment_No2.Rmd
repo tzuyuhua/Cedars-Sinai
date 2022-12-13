@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## 1. Set up and read in the data
+## 1. Set up and read in the data.
 
 ```{r}
 library(reshape2)
